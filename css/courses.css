@@ -1,0 +1,70 @@
+@charset "utf-8";
+/* CSS Document */
+
+.block-courses h2 {
+	font-size: 150%;
+	font-weight: bold;
+	float: left;	
+}
+
+.courses-list-qyear {
+	font-size: 150%;
+	font-weight: bold;
+	float: right;
+}
+
+.courses-list-department {
+	font-style: italic;
+	display: inline;
+}
+
+.courses-list-title {
+	font-style: italic;
+	display: inline;
+}
+
+.courses-list-instructorname {
+}
+
+.courses-list-daytime {
+}
+
+.courses-list-location {
+}
+
+.courses-list-callnum {
+}
+
+.courses-list-clear {
+	clear: both;
+}
+
+.courses_nodedisplay_coursedept {
+	display: inline;
+	float: left;
+	font-size: 150%;
+	font-weight: bold;	
+}
+
+.courses_nodedisplay_cnum {
+	display: inline;
+	float: left;
+	font-size: 150%;
+	font-weight: bold;
+}
+
+.courses_nodedisplay_information {
+	margin-left: 10px;
+}
+
+.courses_nodedisplay_coursetitle {
+	clear: left;
+	font-size: 150%;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.courses_nodedisplay_instructorname {
+	display: inline;
+	float: left;
+}

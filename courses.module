@@ -1,0 +1,197 @@
+<?php
+// $Id$
+/**
+ * @file
+ * A module that allows departments to maintain a list of courses.
+ */
+
+// Include node functions
+include(drupal_get_path('module', 'courses') . '/actions/courses.node.inc');
+
+// Include get quarter function
+include(drupal_get_path('module', 'courses') . '/actions/courses.getquarter.inc');
+
+// Include get quarter function
+include(drupal_get_path('module', 'courses') . '/actions/courses.block.inc');
+
+// Add the stylesheet
+drupal_add_css(drupal_get_path('module', 'courses') .'/css/courses.css');
+
+/**
+ *
+ * Implementation of hook_help().
+ *
+ * Module help page
+ */
+function courses_help($path, $arg) {
+  
+  // Declare output variable
+  $output = '';
+  
+  // provide help for the module
+  switch ($path) {
+    case "admin/help#courses":
+      $output = t("
+        This module allows departments to maintain a list of courses.
+      ");
+      break;
+  }
+  
+  // Return the output
+  return $output;
+} // function courses_help($path, $arg)
+
+/**
+ *
+ * Implementation of hook_perm().
+ *
+ * Module permissions settings
+ */
+function courses_perm() {
+  
+  // return permissions for module
+  return array(
+    'create course',
+    'delete own course',
+    'delete any course',
+    'edit own course',
+    'edit any course',
+    'administer courses',
+  );
+  
+} // function courses_perm()
+
+/**
+ *
+ * Implementation of hook_access().
+ *
+ * Module permissions settings
+ */
+function courses_access($op, $node, $account) {
+
+  if ($op == 'create') {
+    // Only users with permission to do so may create this node type.
+    return user_access('create course', $account);
+  }
+
+  if ($op == 'update') {
+    // Only users with permission to do so may edit this node type.
+    if (user_access('edit any course', $account) || (user_access('edit own course', $account) && ($account->uid == $node->uid))) {
+      return TRUE;
+    }
+  }
+
+  if ($op == 'delete') {
+    // Only users with permission to do so may delete this node type.
+    if (user_access('delete any course', $account) || (user_access('delete own course', $account) && ($account->uid == $node->uid))) {
+      return TRUE;
+    }
+  }
+
+} // function courses_access($op, $node, $account)
+
+/**
+ *
+ * Implementation of hook_admin().
+ *
+ * Module settings page
+ */
+function courses_admin() {
+  
+  // Declare the form
+  $form = array();
+    
+  // Define Unit Name
+  $form['courses_unitname'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name of the Department, center, or unit'),
+    '#default_value' => variable_get('courses_unitname', 'Arts & Sciences'),
+    '#size' => 60,
+    '#maxlength' => 250,
+    '#description' => t('Enter the name of the unit.'),
+    '#required' => TRUE,
+  );  
+  
+  $form['courses_genericdept'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Enter the default Department name.'),
+    '#default_value' => variable_get("courses_genericdept", 'Arts and Sciences'),
+    '#rows' => 1,
+    '#description' => t("The default department name. Leave blank for departments with multiple areas."),
+    '#required' => TRUE,
+  );  
+  
+  // Return the form to system settings
+  return system_settings_form($form);
+} // function courses_admin()
+
+/**
+ *
+ * Implementation of hook_menu().
+ *
+ * Menu items for module
+ */
+function courses_menu() {
+  
+  // Declare the menu items variable
+  $items = array();
+
+  // Define the admin settings menu item
+  $items['admin/settings/courses'] = array(
+    'title' => 'Courses',
+    'description' => 'Modify the settings for courses.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('courses_admin'),
+    'access arguments' => array('administer courses'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  // Define location for our add link AHAH event
+  $items['courses_link/js/%'] = array(
+    'page callback' => 'courses_link_js',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type ' => MENU_CALLBACK,
+  );
+
+  // Return the menu items
+  return $items;
+} // function courses_menu()
+
+/**
+ * Implementation of hook_block().
+ *
+ * Generate HTML for the courses block
+ * @param op the operation from the URL
+ * @param delta offset
+ * @returns block HTML
+ *
+ */
+function courses_block($op='list', $delta=0) {
+
+  if ($op == "list") { // Are we viewing the list of blocks? (YES)
+    // Generate listing of blocks from this module, for the admin/block page
+    
+    // Define the array for our block
+    $block = array();
+    
+    // Declare the title of the block
+    $block[0]["info"] = t('Courses Page.');
+    
+    // Return the block
+    return $block;
+  }
+  elseif ($op == 'view') { // Are we viewing the list of blocks? (NO, we are viewing the block)
+
+    // Get our block content
+    $block_content = courses_userdisp();
+    
+    // set up the block
+    $block['subject'] = 'Courses';
+    $block['content'] = $block_content;
+    
+    // Return the block content
+    return $block;  
+  } // Are we viewing the list of blocks? (END)
+  
+} // function courses_block($op='list', $delta=0)

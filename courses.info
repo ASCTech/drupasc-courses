@@ -1,0 +1,6 @@
+; $Id$
+name = Courses
+description = A module for managing department or interdisciplinary courses.
+core = 6.x
+package = Arts & Sciences Modules
+version = 6.x-1.0-alpha1

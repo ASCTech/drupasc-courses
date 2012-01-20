@@ -1,0 +1,122 @@
+<?php
+// $Id$
+/**
+ * Install the courses module
+ *
+ * @file
+ */
+
+/**
+ * Implementation of hook_install().
+ */
+function courses_install() {
+  drupal_install_schema('courses');
+} // function courses_install()
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function courses_uninstall() {
+  drupal_uninstall_schema('courses');
+} // function courses_uninstall()
+
+/**
+ * Implementation of hook_schema().
+ */
+function courses_schema() {
+
+  // Build the main table
+  $schema['courses'] = array(
+    'description' => t('This table holds information for the course descriptions.'),
+    'fields' => array(                      
+      'nid' => array(
+        'description' => t('Auto-incrementing primary key. Used to identify the node.'),
+        'type' => 'serial',
+        'length' => 10,
+      ),                      
+      'vid' => array(
+        'description' => t('Key used to ID the revision of the node.'),
+        'type' => 'int',
+        'length' => 10,      
+        'not null' => TRUE,
+      ),    
+      'coursedept' => array(
+        'description' => t('The department associated with this course.'),
+        'type' => 'varchar',
+        'length' => 100,    
+        'not null' => TRUE,
+      ),
+      'coursetype' => array(
+        'description' => t('Undergraduate, Graduate, or Both course.'),
+        'type' => 'varchar',
+        'length' => 1,    
+        'not null' => TRUE,
+      ),
+      'cnum' => array(
+        'description' => t('Course Number.'),
+        'type' => 'varchar',
+        'length' => 6,    
+        'not null' => TRUE,
+      ),
+      'credits' => array(
+        'description' => t('Number of credit hours for course.'),
+        'type' => 'varchar',
+        'length' => 2,    
+        'not null' => TRUE,
+      ),  
+      'location' => array(
+        'description' => t('Location of course.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'callnum' => array(
+        'description' => t('Call Number for course.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'instructorname' => array(
+        'description' => t('Name of the instructor for the course.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'instructoremail' => array(
+        'description' => t('Email address of the instructor for the course.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'daysofweek' => array(
+        'description' => t('Days of week that class is held.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'quarter' => array(
+        'description' => t('Quarter that course occurs.'),
+        'type' => 'varchar',
+        'length' => 2,    
+        'not null' => TRUE,
+      ),  
+      'timeofday' => array(
+        'description' => t('Time of day that class is held.'),
+        'type' => 'varchar',
+        'length' => 50,    
+        'not null' => TRUE,
+      ),  
+      'year' => array(
+        'description' => t('Year that course occurs.'),
+        'type' => 'varchar',
+        'length' => 4,    
+        'not null' => TRUE,
+      ),      
+    ),
+    'courses_nid' => array('nid'),
+    'primary key' => array('vid', 'nid'),    
+  );
+    
+  // Return the database schema
+  return $schema;
+} // function courses_schema()
